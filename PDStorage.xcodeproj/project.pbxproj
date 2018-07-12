@@ -15,6 +15,8 @@
 		ECBC019A20F705FA00214580 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBC019920F705FA00214580 /* main.m */; };
 		ECBC01A420F705FA00214580 /* PDStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBC01A320F705FA00214580 /* PDStorageTests.m */; };
 		ECBC01AF20F705FA00214580 /* PDStorageUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBC01AE20F705FA00214580 /* PDStorageUITests.m */; };
+		ECBC01BF20F7062100214580 /* PDQueryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBC01BE20F7062100214580 /* PDQueryItem.m */; };
+		ECBC01C220F7068700214580 /* PDQueryDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBC01C120F7068700214580 /* PDQueryDriver.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,10 @@
 		ECBC01AA20F705FA00214580 /* PDStorageUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDStorageUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECBC01AE20F705FA00214580 /* PDStorageUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDStorageUITests.m; sourceTree = "<group>"; };
 		ECBC01B020F705FA00214580 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ECBC01BD20F7062100214580 /* PDQueryItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDQueryItem.h; sourceTree = "<group>"; };
+		ECBC01BE20F7062100214580 /* PDQueryItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDQueryItem.m; sourceTree = "<group>"; };
+		ECBC01C020F7068700214580 /* PDQueryDriver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDQueryDriver.h; sourceTree = "<group>"; };
+		ECBC01C120F7068700214580 /* PDQueryDriver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDQueryDriver.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,7 @@
 		ECBC018920F705F900214580 /* PDStorage */ = {
 			isa = PBXGroup;
 			children = (
+				ECBC01BC20F7060100214580 /* Source */,
 				ECBC018A20F705F900214580 /* AppDelegate.h */,
 				ECBC018B20F705F900214580 /* AppDelegate.m */,
 				ECBC018D20F705F900214580 /* ViewController.h */,
@@ -130,6 +137,17 @@
 				ECBC01B020F705FA00214580 /* Info.plist */,
 			);
 			path = PDStorageUITests;
+			sourceTree = "<group>";
+		};
+		ECBC01BC20F7060100214580 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				ECBC01BD20F7062100214580 /* PDQueryItem.h */,
+				ECBC01BE20F7062100214580 /* PDQueryItem.m */,
+				ECBC01C020F7068700214580 /* PDQueryDriver.h */,
+				ECBC01C120F7068700214580 /* PDQueryDriver.m */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +281,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECBC018F20F705F900214580 /* ViewController.m in Sources */,
+				ECBC01C220F7068700214580 /* PDQueryDriver.m in Sources */,
+				ECBC01BF20F7062100214580 /* PDQueryItem.m in Sources */,
 				ECBC019A20F705FA00214580 /* main.m in Sources */,
 				ECBC018C20F705F900214580 /* AppDelegate.m in Sources */,
 			);
