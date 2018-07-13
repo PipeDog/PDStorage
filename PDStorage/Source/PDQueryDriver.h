@@ -16,7 +16,7 @@
 - (BOOL)open;
 - (BOOL)close;
 
-- (PDQueryItem *)query:(NSString *)stmt bind:(NSArray *)bind;
 - (PDQueryItem *)query:(NSString *)stmt;
+- (PDQueryItem *)query:(NSString *)stmt bind:(NSArray *)bind;
 
 @end

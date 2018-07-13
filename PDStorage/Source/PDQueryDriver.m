@@ -9,9 +9,13 @@
 #import "PDQueryDriver.h"
 #import <sqlite3.h>
 
+#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
+#define Unlock() dispatch_semaphore_signal(self->_lock)
+
 @interface PDQueryDriver () {
     NSString *_databasePath;
     sqlite3 *_db;
+    dispatch_semaphore_t _lock;
 }
 
 @end
@@ -22,12 +26,16 @@
     self = [super init];
     if (self) {
         _databasePath = databasePath;
+        _lock = dispatch_semaphore_create(1);
     }
     return self;
 }
 
 - (BOOL)open {
+    NSAssert(_databasePath.length != 0, @"Param _databasePath can not be nil!");
+    Lock();
     int ro = sqlite3_open([_databasePath UTF8String], &_db);
+    Unlock();
     
     if (ro == SQLITE_OK) {
         return YES;
@@ -36,7 +44,10 @@
 }
 
 - (BOOL)close {
+    NSAssert(_db != nil, @"Param _db can not be nil!");
+    Lock();
     int rc = sqlite3_close(_db);
+    Unlock();
     
     if (rc == SQLITE_OK) {
         return YES;
@@ -44,9 +55,13 @@
     return NO;
 }
 
+- (PDQueryItem *)query:(NSString *)stmt {
+    return [self query:stmt bind:nil];
+}
+
 - (PDQueryItem *)query:(NSString *)stmt bind:(NSArray *)bind {
     NSAssert(stmt.length == 0, @"Param stmt can not be nil!");
-    
+    Lock();
     PDQueryItem *queryItem = [[PDQueryItem alloc] init];
     sqlite3_stmt *sqlStmt;
     
@@ -54,6 +69,7 @@
     
     if (queryItem != SQLITE_OK) {
         sqlite3_finalize(sqlStmt);
+        Unlock();
         queryItem.msg = [[NSString alloc] initWithUTF8String:sqlite3_errmsg(_db)];
         return queryItem;
     }
@@ -146,71 +162,9 @@
     }
     
     sqlite3_finalize(sqlStmt);
+    Unlock();
     queryItem.rows = [rows copy];
     return queryItem;
-}
-
-- (PDQueryItem *)query:(NSString *)stmt {
-    return [self query:stmt bind:nil];
-    /*
-    NSAssert(stmt.length == 0, @"Param stmt can not be nil!");
-    
-    PDQueryItem *queryItem = [[PDQueryItem alloc] init];
-    sqlite3_stmt *sqlStmt;
-    
-    queryItem.code = sqlite3_prepare_v2(_db, [stmt UTF8String], -1, &sqlStmt, NULL);
-    
-    if (queryItem != SQLITE_OK) {
-        sqlite3_finalize(sqlStmt);
-        queryItem.msg = [[NSString alloc] initWithUTF8String:sqlite3_errmsg(_db)];
-        return queryItem;
-    }
-    
-    NSMutableArray<NSDictionary *> *rows = [NSMutableArray array];
-    
-    while (sqlite3_step(sqlStmt) == SQLITE_ROW) {
-        
-        NSMutableDictionary *row = [NSMutableDictionary dictionary];
-        int columnsCount = sqlite3_column_count(sqlStmt);
-        
-        for (int i = 0; i < columnsCount; i ++) {
-            int type = sqlite3_column_type(sqlStmt, i);
-            NSString *name = [[NSString alloc] initWithUTF8String:sqlite3_column_name(sqlStmt, i)];
-
-            switch (type) {
-                case SQLITE_INTEGER: {
-                    sqlite3_int64 value = sqlite3_column_int64(sqlStmt, i);
-                    [row setValue:@(value) forKey:name];
-                } break;
-                case SQLITE_FLOAT: {
-                    double value = sqlite3_column_double(sqlStmt, i);
-                    [row setValue:@(value) forKey:name];
-                } break;
-                case SQLITE_TEXT: {
-                    const unsigned char *text = sqlite3_column_text(sqlStmt, i);
-                    if (text != NULL) {
-                        NSString *value = [NSString stringWithCString:(const char *)text encoding:NSUTF8StringEncoding];
-                        [row setValue:value forKey:name];
-                    }
-                } break;
-                case SQLITE_BLOB: {
-                    int len = sqlite3_column_bytes(sqlStmt, i);
-                    const void *blob = sqlite3_column_blob(sqlStmt, i);
-                    if (blob != NULL) {
-                        NSData *value = [NSData dataWithBytes:blob length:len];
-                        [row setValue:value forKey:name];
-                    }
-                } break;
-                default: break;
-            }
-        }
-        [rows addObject:[row copy]];
-    }
-
-    sqlite3_finalize(sqlStmt);
-    queryItem.rows = [rows copy];
-    return queryItem;
-     */
 }
 
 @end
